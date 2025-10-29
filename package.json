@@ -13,17 +13,14 @@
     "node": ">=22.18.0"
   },
   "packageManager": "yarn@4.10.3",
-  "files": [
-    "lib/*.js"
-  ],
-  "exports": {
-    ".": "./lib/main.js"
-  },
-  "main": "./lib/main.js",
   "devDependencies": {
-    "aberlaas": "2.18.1"
+    "aberlaas": "2.18.1",
+    "vite": "7.1.12"
   },
   "scripts": {
+    "serve": "./scripts/serve",
+    "build": "./scripts/build",
+    "preview": "./scripts/preview",
     "ci": "./scripts/ci",
     "compress": "./scripts/compress",
     "lint": "./scripts/lint",
@@ -31,5 +28,14 @@
     "test": "./scripts/test",
     "test:watch": "./scripts/test-watch",
     "release": "./scripts/release"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "6.1.19",
+    "@fullcalendar/daygrid": "6.1.19",
+    "@fullcalendar/react": "6.1.19",
+    "@vitejs/plugin-react": "5.1.0",
+    "algoliasearch": "5.41.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
   }
 }
