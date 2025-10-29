@@ -31,12 +31,12 @@ const EventModal = ({ event, onClose }) => {
   };
 
   const formatDateTime = () => {
-    if (!event.extendedProps.startTime) return '';
+    if (!event.extendedProps.startDate) return '';
 
     // Timestamp is already in Paris time, treat as UTC and display directly
-    const startDate = new Date(event.extendedProps.startTime * 1000);
-    const endDate = event.extendedProps.endTime
-      ? new Date(event.extendedProps.endTime * 1000)
+    const startDate = new Date(event.extendedProps.startDate * 1000);
+    const endDate = event.extendedProps.endDate
+      ? new Date(event.extendedProps.endDate * 1000)
       : null;
 
     // Format date using UTC methods (to avoid timezone conversion)
@@ -85,27 +85,30 @@ const EventModal = ({ event, onClose }) => {
         </button>
 
         <div className="modal-layout">
-          {event.extendedProps.imageUrl && (
+          {event.extendedProps.pictureMain?.url && (
             <div className="modal-image">
-              <img src={event.extendedProps.imageUrl} alt={event.title} />
+              <img
+                src={event.extendedProps.pictureMain.url}
+                alt={event.title}
+              />
             </div>
           )}
 
           <div className="modal-metadata">
             <h2>{event.title}</h2>
 
-            {event.extendedProps.startTime && (
+            {event.extendedProps.startDate && (
               <div className="modal-datetime">{formatDateTime()}</div>
             )}
 
-            {event.url && (
+            {event.extendedProps.url && (
               <a
-                href={event.url}
+                href={event.extendedProps.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="modal-link"
               >
-                {event.url}
+                {event.extendedProps.url}
               </a>
             )}
           </div>

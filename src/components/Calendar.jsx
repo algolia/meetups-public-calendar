@@ -1,76 +1,54 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { getMeetups } from '../services/algolia';
-import EventModal from './EventModal';
+import EventModal from './EventModal.jsx';
 
 const Calendar = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [monthEvents, setMonthEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const lastFetchedRange = useRef(null);
 
-  const fetchMeetups = async (startDate, endDate) => {
-    try {
-      setLoading(true);
-      const startTimestamp = Math.floor(startDate.getTime() / 1000);
-      const endTimestamp = Math.floor(endDate.getTime() / 1000);
+  const handleDatesSet = useCallback(async (dateInfo) => {
+    const startTimestamp = Math.floor(dateInfo.start.getTime() / 1000);
+    const endTimestamp = Math.floor(dateInfo.end.getTime() / 1000);
+    const rangeKey = `${startTimestamp}-${endTimestamp}`;
 
-      const meetups = await getMeetups(startTimestamp, endTimestamp);
-
-      const formattedEvents = meetups
-        .filter((meetup) => {
-          if (!meetup.startDate) {
-            return false;
-          }
-          return true;
-        })
-        .map((meetup) => {
-          // Convert Unix timestamp to date (YYYY-MM-DD only, no time)
-          const eventStartDate = new Date(meetup.startDate * 1000)
-            .toISOString()
-            .split('T')[0];
-
-          return {
-            id: meetup.objectID,
-            title: meetup.name || 'Meetup',
-            start: eventStartDate,
-            url: meetup.url,
-            extendedProps: {
-              imageUrl: meetup.pictureMain?.url || '',
-              location: meetup.location || '',
-              description: meetup.description || '',
-              startTime: meetup.startDate,
-              endTime: meetup.endDate,
-            },
-          };
-        });
-
-      setEvents(formattedEvents);
-      setError(null);
-    } catch (err) {
-      console.error('Error loading meetups:', err);
-      setError('Failed to load meetups. Please try again later.');
-    } finally {
-      setLoading(false);
+    if (lastFetchedRange.current === rangeKey) {
+      return;
     }
-  };
 
-  const handleDatesSet = (dateInfo) => {
-    fetchMeetups(dateInfo.start, dateInfo.end);
-  };
+    lastFetchedRange.current = rangeKey;
 
-  const handleEventClick = (info) => {
-    info.jsEvent.preventDefault();
+    const meetups = await getMeetups(startTimestamp, endTimestamp);
+
+    const formattedEvents = meetups.map((meetup) => {
+      // Convert Unix timestamp to date (YYYY-MM-DD only, no time)
+      const eventStartDate = new Date(meetup.startDate * 1000)
+        .toISOString()
+        .split('T')[0];
+
+      return {
+        id: meetup.objectID,
+        title: meetup.name,
+        start: eventStartDate,
+        extendedProps: meetup,
+      };
+    });
+
+    setMonthEvents(formattedEvents);
+  }, []);
+
+  const handleEventClick = useCallback((info) => {
     setSelectedEvent(info.event);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setSelectedEvent(null);
-  };
+  }, []);
 
-  const renderEventContent = (eventInfo) => {
-    const { imageUrl } = eventInfo.event.extendedProps;
+  const renderEventContent = useCallback((eventInfo) => {
+    const imageUrl = eventInfo.event.extendedProps.pictureMain?.url;
 
     if (imageUrl) {
       return (
@@ -100,44 +78,28 @@ const Calendar = () => {
     }
 
     return <div>{eventInfo.event.title}</div>;
-  };
-
-  if (loading) {
-    return (
-      <div style={{ textAlign: 'center', padding: '2rem', color: '#8b92b8' }}>
-        Loading meetups...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ textAlign: 'center', padding: '2rem', color: '#ff6b6b' }}>
-        {error}
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <>
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
-        events={events}
-        eventClick={handleEventClick}
-        eventContent={renderEventContent}
-        datesSet={handleDatesSet}
+        firstDay={1}
+        hiddenDays={[0, 6]}
         headerToolbar={{
           left: 'today',
           center: 'title',
           right: 'prev,next',
         }}
-        firstDay={1}
-        hiddenDays={[0, 6]}
         fixedWeekCount={false}
         height="auto"
         contentHeight="auto"
         eventDisplay="block"
+        events={monthEvents}
+        eventClick={handleEventClick}
+        eventContent={renderEventContent}
+        datesSet={handleDatesSet}
       />
       <EventModal event={selectedEvent} onClose={handleCloseModal} />
     </>
