@@ -1,8 +1,35 @@
 {
   "name": "meetups-public-calendar",
   "version": "0.0.1",
+  "author": "algolia",
+  "description": "",
+  "keywords": [],
+  "repository": "algolia/meetups-public-calendar",
+  "homepage": "https://github.com/algolia/meetups-public-calendar",
   "type": "module",
+  "sideEffects": false,
   "license": "MIT",
-  "main": "index.js",
-  "packageManager": "yarn@4.10.3"
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "packageManager": "yarn@4.10.3",
+  "files": [
+    "lib/*.js"
+  ],
+  "exports": {
+    ".": "./lib/main.js"
+  },
+  "main": "./lib/main.js",
+  "devDependencies": {
+    "aberlaas": "2.18.1"
+  },
+  "scripts": {
+    "ci": "./scripts/ci",
+    "compress": "./scripts/compress",
+    "lint": "./scripts/lint",
+    "lint:fix": "./scripts/lint-fix",
+    "test": "./scripts/test",
+    "test:watch": "./scripts/test-watch",
+    "release": "./scripts/release"
+  }
 }
