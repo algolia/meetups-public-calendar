@@ -20,7 +20,6 @@
   "scripts": {
     "serve": "./scripts/serve",
     "build": "./scripts/build",
-    "preview": "./scripts/preview",
     "ci": "./scripts/ci",
     "compress": "./scripts/compress",
     "lint": "./scripts/lint",
