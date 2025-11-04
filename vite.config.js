@@ -1,14 +1,16 @@
 import { defineConfig } from 'vite';
 import config from 'aberlaas/configs/vite';
 
-// @vitejs/plugin-react uses the exports syntax in its package.json, which
-// eslint-plugin-import doesn't support
-// eslint-disable-next-line import/no-unresolved
+/* eslint-disable import/no-unresolved */
+// Those plugins uses the .exports syntax in their package.json, which isn't yet
+// supported by eslint-plugin-import
+import vitePluginTailwind from '@tailwindcss/vite';
 import vitePluginReact from '@vitejs/plugin-react';
+/* eslint-enable import/no-unresolved */
 
 export default defineConfig({
   ...config,
-  plugins: [vitePluginReact()],
+  plugins: [vitePluginTailwind(), vitePluginReact()],
   root: '.',
   build: {
     outDir: 'dist',

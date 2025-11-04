@@ -52,26 +52,11 @@ const Calendar = () => {
 
     if (imageUrl) {
       return (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-        >
+        <div className="absolute inset-0 h-full w-full">
           <img
             src={imageUrl}
             alt={eventInfo.event.title}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              borderRadius: '4px',
-            }}
+            className="h-full w-full rounded object-contain"
           />
         </div>
       );

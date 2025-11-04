@@ -1,7 +1,8 @@
 import { algoliasearch } from 'algoliasearch';
 
 const appId = 'MXM0JWJNIW';
-const apiKey = '6b85adf80eb163b6b2a5af2408cee83b';
+const apiKey =
+  'NGU1NGYzMjU3MWJiYjQ3MTg3ODI5MDdkOTc0M2RhN2I4MGM4YWZlZWMwYmIyNGY1MWI2YmU2MjJjYzU3NDA0Y2ZpbHRlcnM9c3RhdHVzJTNBJUUyJTlDJTg1JTIwQ29uZmlybWVk';
 const indexName = 'meetups';
 
 const client = algoliasearch(appId, apiKey);

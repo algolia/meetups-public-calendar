@@ -78,35 +78,44 @@ const EventModal = ({ event, onClose }) => {
   };
 
   return (
-    <div className="modal-backdrop" onClick={handleBackdropClick}>
-      <div className="modal-content">
-        <button className="modal-close" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-8"
+      onClick={handleBackdropClick}
+    >
+      <div className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-slate-800 shadow-2xl">
+        <button
+          className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-3xl leading-none text-white transition-colors hover:bg-white/30"
+          onClick={onClose}
+        >
           ×
         </button>
 
-        <div className="modal-layout">
+        <div className="grid gap-0 md:grid-cols-[350px_1fr]">
           {event.extendedProps.pictureMain?.url && (
-            <div className="modal-image">
+            <div className="flex min-h-[200px] items-center justify-center overflow-hidden bg-slate-950 md:col-start-1 md:row-start-1 md:min-h-0">
               <img
                 src={event.extendedProps.pictureMain.url}
                 alt={event.title}
+                className="h-full w-full object-contain"
               />
             </div>
           )}
 
-          <div className="modal-metadata">
-            <h2>{event.title}</h2>
+          <div className="flex flex-col p-8 md:col-start-2 md:row-start-1">
+            <h2 className="mb-4 text-4xl leading-tight font-bold">
+              {event.title}
+            </h2>
 
-            {event.extendedProps.startDate && (
-              <div className="modal-datetime">{formatDateTime()}</div>
-            )}
+            <div className="mb-4 text-lg text-slate-400">
+              {formatDateTime()}
+            </div>
 
             {event.extendedProps.url && (
               <a
                 href={event.extendedProps.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="modal-link"
+                className="block text-lg break-all text-blue-400 transition-colors hover:text-blue-300 hover:underline"
               >
                 {event.extendedProps.url}
               </a>
@@ -114,22 +123,26 @@ const EventModal = ({ event, onClose }) => {
           </div>
 
           {event.extendedProps.description && (
-            <div className="modal-description">
-              <div
-                className={`modal-description-text ${
-                  isExpanded ? '' : 'collapsed'
-                }`}
-              >
-                <p>{event.extendedProps.description}</p>
-              </div>
-              {event.extendedProps.description.length > 300 && (
-                <button
-                  className="modal-read-more"
-                  onClick={() => setIsExpanded(!isExpanded)}
+            <div className="p-8 pt-0 md:col-span-2 md:row-start-2">
+              <div className="relative rounded-lg bg-white/5 p-6 leading-relaxed whitespace-pre-wrap text-slate-400">
+                <div
+                  className={`relative transition-all ${
+                    isExpanded
+                      ? 'max-h-[300px] overflow-y-auto'
+                      : 'max-h-[120px] overflow-hidden'
+                  }`}
                 >
-                  {isExpanded ? '↑ Show less ↑' : '↓ Show more ↓'}
-                </button>
-              )}
+                  <p className="m-0">{event.extendedProps.description}</p>
+                </div>
+                {event.extendedProps.description.length > 300 && (
+                  <button
+                    className="sticky bottom-4 z-10 mx-auto mt-4 block rounded border border-blue-400 bg-slate-800/98 px-4 py-2 text-blue-400 transition-all hover:bg-blue-400 hover:text-white"
+                    onClick={() => setIsExpanded(!isExpanded)}
+                  >
+                    {isExpanded ? '↑ Show less ↑' : '↓ Show more ↓'}
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>
