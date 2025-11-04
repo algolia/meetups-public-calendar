@@ -2,7 +2,7 @@ import { algoliasearch } from 'algoliasearch';
 
 const appId = 'MXM0JWJNIW';
 const apiKey =
-  'NGU1NGYzMjU3MWJiYjQ3MTg3ODI5MDdkOTc0M2RhN2I4MGM4YWZlZWMwYmIyNGY1MWI2YmU2MjJjYzU3NDA0Y2ZpbHRlcnM9c3RhdHVzJTNBJUUyJTlDJTg1JTIwQ29uZmlybWVk';
+  'YmYzNzgxNTNmMzIxZmVhNTQyYThiYWZlZWI2OTY3ODFkMGZkMTY3MTEwNTQ3ZmU1ZjI2ZmI0ZjgzZDgyMmQ3NmZpbHRlcnM9c3RhdHVzJTNBJTIyJUUyJTlDJTg1JTIwQ29uZmlybWVkJTIy';
 const indexName = 'meetups';
 
 const client = algoliasearch(appId, apiKey);

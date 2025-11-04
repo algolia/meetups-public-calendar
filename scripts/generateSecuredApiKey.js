@@ -36,7 +36,7 @@ const client = algoliasearch(appId, searchApiKey);
 const securedApiKey = client.generateSecuredApiKey({
   parentApiKey: searchApiKey,
   restrictions: {
-    filters: 'status:✅ Confirmed',
+    filters: 'status:"✅ Confirmed"',
   },
 });
 
