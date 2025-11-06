@@ -52,13 +52,11 @@ const Calendar = () => {
 
     if (imageUrl) {
       return (
-        <div className="absolute inset-0 h-full w-full">
-          <img
-            src={imageUrl}
-            alt={eventInfo.event.title}
-            className="h-full w-full rounded object-contain"
-          />
-        </div>
+        <img
+          src={imageUrl}
+          alt={eventInfo.event.title}
+          className="h-full w-full object-contain"
+        />
       );
     }
 
