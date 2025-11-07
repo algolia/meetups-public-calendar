@@ -18,8 +18,33 @@ const Calendar = ({ displayMode = 'website', displayDate }) => {
   const calendarRef = useRef(null);
   const config = useCalendarConfig(displayMode, displayDate, calendarRef);
   const meetups = useMeetups(displayDate);
-  const onDateChange = useDateChange(displayMode);
+  const updateUrl = useUpdateUrl(displayMode);
   const { focusedEvent, onEventClick, onModalClose } = useEventModal();
+  const setSquare = useSetSquare(calendarRef);
+
+  // Called when calendar dates change (including first render)
+  const onDateChange = useCallback(
+    (dateInfo) => {
+      updateUrl(dateInfo);
+      if (displayMode === 'fullscreen') {
+        setSquare();
+      }
+    },
+    [updateUrl, displayMode, setSquare],
+  );
+
+  // Listen to window resize and fullscreen change
+  useEffect(() => {
+    if (displayMode !== 'fullscreen') return;
+
+    window.addEventListener('resize', setSquare);
+    document.addEventListener('fullscreenchange', setSquare);
+
+    return () => {
+      window.removeEventListener('resize', setSquare);
+      document.removeEventListener('fullscreenchange', setSquare);
+    };
+  }, [displayMode, setSquare]);
 
   if (!displayDate) {
     return null;
@@ -91,7 +116,7 @@ function useMeetups(displayDate) {
  * @param {string} displayMode - "website" or "fullscreen"
  * @returns {Function} Handler that updates the URL
  */
-function useDateChange(displayMode) {
+function useUpdateUrl(displayMode) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -134,7 +159,7 @@ function useEventModal() {
  * @param {object} calendarRef - Ref to the FullCalendar component
  * @returns {Function} Function to resize calendar to square cells
  */
-function useSquareResize(calendarRef) {
+function useSetSquare(calendarRef) {
   return useCallback(() => {
     if (!calendarRef.current) return;
 
@@ -166,7 +191,7 @@ function useCalendarConfig(displayMode, displayDate, calendarRef) {
     navigate(`/${displayDate.year}/${displayDate.month}/fullscreen`);
   }, [displayDate, navigate]);
 
-  const setSquare = useSquareResize(calendarRef);
+  const setSquare = useSetSquare(calendarRef);
 
   // Date as YYYY-MM-DD for FullCalendar initialDate
   const initialDate = dayjs(
