@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* FullCalendar custom styles using Tailwind CSS variables */
+/* FullCalendar custom styles using Tailwind CSS variables  */
 .fc {
   --fc-border-color: var(--color-slate-700);
 
@@ -13,53 +13,64 @@
 
   --fc-today-bg-color: var(--color-blue-900);
 
-  .fc-button {
-    @apply px-4;
-    @apply py-2;
-    @apply font-medium;
-    @apply capitalize;
-  }
-  .fc-toolbar-title {
-    @apply text-3xl;
-    @apply font-semibold;
-  }
-
-  .fc-col-header-cell {
-    @apply py-4;
-    @apply bg-slate-900;
-    @apply text-slate-400;
-    @apply font-semibold;
-    @apply text-xs;
-    @apply uppercase;
-  }
-
-  .fc-day-past {
-    @apply bg-slate-900;
-    @apply opacity-50;
-    .fc-daygrid-day-number {
-      @apply opacity-60;
+  .fc-header-toolbar {
+    .fc-button {
+      @apply px-4;
+      @apply py-2;
+      @apply font-medium;
+      @apply capitalize;
+    }
+    .fc-toolbar-title {
+      @apply text-3xl;
+      @apply font-semibold;
     }
   }
 
-  .fc-daygrid-day {
-    &:hover {
-      @apply bg-slate-700;
-    }
-    .fc-daygrid-day-frame {
-      @apply min-h-[120px];
-      @apply h-full;
-
-      /* .fc-daygrid-day-top { } */
-      .fc-daygrid-day-events {
-        @apply absolute inset-0 m-0;
-        .fc-daygrid-event-harness {
-          @apply absolute inset-0 m-0;
-          .fc-event {
-            @apply absolute inset-0 m-0;
-            @apply bg-transparent;
-            @apply border-none;
-            .fc-event-main {
-              @apply absolute inset-0 m-0;
+  .fc-view-harness {
+    .fc-daygrid {
+      /* Grid ()*/
+      table.fc-scrollgrid {
+        tbody {
+          /* Header */
+          tr.fc-scrollgrid-section-header {
+            .fc-col-header-cell {
+              @apply py-4;
+              @apply bg-slate-900;
+              @apply text-slate-400;
+              @apply font-semibold;
+              @apply text-xs;
+              @apply uppercase;
+            }
+          }
+          /* Days */
+          tr.fc-scrollgrid-section-body {
+            .fc-daygrid-day {
+              &.fc-day-past {
+                @apply bg-slate-900;
+                @apply opacity-50;
+                .fc-daygrid-day-number {
+                  @apply opacity-60;
+                }
+              }
+              &:hover {
+                @apply bg-slate-700;
+              }
+              .fc-daygrid-day-frame {
+                .fc-daygrid-day-events {
+                  @apply absolute inset-0 m-0;
+                  .fc-daygrid-event-harness {
+                    @apply absolute inset-0 m-0;
+                    .fc-event {
+                      @apply absolute inset-0 m-0;
+                      @apply bg-transparent;
+                      @apply border-none;
+                      .fc-event-main {
+                        @apply absolute inset-0 m-0;
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }

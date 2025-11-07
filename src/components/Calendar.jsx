@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -15,40 +15,54 @@ import Image from './Image.jsx';
  * @returns {JSX.Element} Calendar element
  */
 const Calendar = ({ displayMode = 'website', displayDate }) => {
-  const { headerToolbar, customButtons, initialDate } = useCalendarConfig(
-    displayMode,
-    displayDate,
-  );
+  const calendarRef = useRef(null);
+  const config = useCalendarConfig(displayMode, displayDate);
   const meetups = useMeetups(displayDate);
   const onDateChange = useDateChange(displayMode);
   const { focusedEvent, onEventClick, onModalClose } = useEventModal();
-  console.log({ focusedEvent, onEventClick, onModalClose });
 
   if (!displayDate) {
     return null;
   }
 
+  // Grab the height of one day, and resize teh whole calendar to make it square
+  const setSquare = () => {
+    const api = calendarRef.current.getApi();
+
+    // Get one cell height
+    const day = api.el.querySelector('.fc-daygrid-day');
+    const dayHeight = day.offsetHeight;
+
+    // Set the wrapper width as 5 times this height, so each cell is a square
+    const calendarWidth = 5 * dayHeight;
+    const wrapper = document.querySelector('.calendar-wrapper');
+    wrapper.style.width = `${calendarWidth}px`;
+
+    // Re-render the calendar so it fits in the whole available space
+    api.render();
+  };
+
   return (
-    <>
+    <div className="calendar-wrapper m-auto h-full">
+      <button className="fixed bg-blue-500 p-3" onClick={setSquare}>
+        Set Square
+      </button>
       <FullCalendar
+        ref={calendarRef}
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
-        initialDate={initialDate}
         firstDay={1}
         hiddenDays={[0, 6]}
-        headerToolbar={headerToolbar}
-        customButtons={customButtons}
         fixedWeekCount={false}
-        height="auto"
-        contentHeight="auto"
-        eventDisplay="block"
         events={meetups}
         eventClick={onEventClick}
         eventContent={renderEventContent}
         datesSet={onDateChange}
+        windowResize={setSquare}
+        {...config}
       />
       <EventModal event={focusedEvent} onClose={onModalClose} />
-    </>
+    </div>
   );
 };
 
@@ -168,6 +182,8 @@ function useCalendarConfig(displayMode, displayDate) {
           click: fullscreenButtonClick,
         },
       },
+      height: null,
+      aspectRatio: 16 / 9,
       initialDate,
     },
     fullscreen: {
@@ -177,6 +193,8 @@ function useCalendarConfig(displayMode, displayDate) {
         right: '',
       },
       customButtons: {},
+      height: '100%',
+      aspectRatio: null,
       initialDate,
     },
   };

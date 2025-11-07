@@ -25,7 +25,7 @@ const CalendarPageFullscreen = () => {
   useEscapeKey(handleExitFullscreen);
 
   return (
-    <div className="fixed inset-0 bg-slate-800 p-8">
+    <div className="fullscreen-wrapper h-screen bg-slate-800 p-8">
       {/* Exit fullscreen button - transparent by default, visible on hover */}
       <button
         onClick={handleExitFullscreen}
@@ -34,7 +34,6 @@ const CalendarPageFullscreen = () => {
       >
         ×
       </button>
-
       <Calendar displayMode="fullscreen" displayDate={displayDate} />
     </div>
   );
