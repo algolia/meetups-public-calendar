@@ -96,14 +96,14 @@ const EventModal = ({ event, onClose }) => {
               {formatDateTime()}
             </div>
 
-            {event.extendedProps.url && (
+            {event.extendedProps.URL && (
               <a
-                href={event.extendedProps.url}
+                href={event.extendedProps.URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-lg break-all text-blue-400 transition-colors hover:text-blue-300 hover:underline"
               >
-                {event.extendedProps.url}
+                {event.extendedProps.URL}
               </a>
             )}
           </div>

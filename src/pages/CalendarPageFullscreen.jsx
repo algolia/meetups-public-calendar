@@ -97,12 +97,34 @@ function useSetSquare(calendarRef) {
  */
 function useResizeListeners(callback) {
   useEffect(() => {
-    window.addEventListener('resize', callback);
-    document.addEventListener('fullscreenchange', callback);
+    // Debounced callback to avoid too many calls
+    let timeoutId;
+    const debouncedCallback = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        callback();
+      }, 100);
+    };
+
+    // Listen to all possible fullscreen events (browser compatibility)
+    const fullscreenEvents = [
+      'fullscreenchange',
+      'webkitfullscreenchange',
+      'mozfullscreenchange',
+      'MSFullscreenChange',
+    ];
+
+    window.addEventListener('resize', debouncedCallback);
+    fullscreenEvents.forEach((event) => {
+      document.addEventListener(event, debouncedCallback);
+    });
 
     return () => {
-      window.removeEventListener('resize', callback);
-      document.removeEventListener('fullscreenchange', callback);
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', debouncedCallback);
+      fullscreenEvents.forEach((event) => {
+        document.removeEventListener(event, debouncedCallback);
+      });
     };
   }, [callback]);
 }

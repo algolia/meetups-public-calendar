@@ -64,6 +64,13 @@
                       @apply absolute inset-0 m-0;
                       @apply bg-transparent;
                       @apply border-none;
+                      @apply cursor-pointer;
+                      @apply transition-transform duration-200 ease-in-out;
+
+                      &:hover {
+                        @apply z-10 scale-120;
+                      }
+
                       .fc-event-main {
                         @apply absolute inset-0 m-0;
                       }
