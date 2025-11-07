@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Image component with LQIP (Low Quality Image Placeholder) support
@@ -11,6 +11,19 @@ import { useState, useEffect } from 'react';
  * @returns {JSX.Element} Image element with LQIP loading
  */
 const Image = ({ src, lqip, alt, className = '' }) => {
+  const { currentSrc, isLoaded } = useProgressiveImage(src, lqip);
+  const imageClassName = buildImageClassName(isLoaded, lqip, className);
+
+  return <img src={currentSrc} alt={alt} className={imageClassName} />;
+};
+
+/**
+ * Custom hook to handle progressive image loading
+ * @param {string} src - High-quality image URL
+ * @param {string} [lqip] - Low-quality image URL (optional)
+ * @returns {{currentSrc: string, isLoaded: boolean}} Current image source and loading state
+ */
+function useProgressiveImage(src, lqip) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(lqip || src);
 
@@ -19,13 +32,6 @@ const Image = ({ src, lqip, alt, className = '' }) => {
     setIsLoaded(false);
     setCurrentSrc(lqip || src);
 
-    // Don't load high-quality image if it's the same as LQIP
-    if (lqip === src) {
-      setIsLoaded(true);
-      return;
-    }
-
-    // Preload the high-quality image
     const img = new window.Image();
     img.src = src;
 
@@ -35,7 +41,6 @@ const Image = ({ src, lqip, alt, className = '' }) => {
     };
 
     img.onerror = () => {
-      // If high-quality fails to load, mark as loaded anyway to remove blur
       setIsLoaded(true);
     };
 
@@ -46,15 +51,30 @@ const Image = ({ src, lqip, alt, className = '' }) => {
     };
   }, [src, lqip]);
 
-  return (
-    <img
-      src={currentSrc}
-      alt={alt}
-      className={`transition-all duration-300 ${
-        !isLoaded && lqip ? 'blur-sm scale-110' : 'blur-0 scale-100'
-      } ${className}`}
-    />
-  );
-};
+  return { currentSrc, isLoaded };
+}
+
+/**
+ * Build image className based on loading state
+ * @param {boolean} isLoaded - Whether the high-quality image has loaded
+ * @param {string} [lqip] - Low-quality image URL (optional)
+ * @param {string} [className] - Additional CSS classes
+ * @returns {string} Complete className string
+ */
+function buildImageClassName(isLoaded, lqip, className) {
+  const classes = ['transition-all', 'duration-300'];
+  if (className) {
+    classes.push(className);
+  }
+
+  // Loading state classes
+  if (!isLoaded && lqip) {
+    classes.push('scale-110', 'blur-sm');
+  } else {
+    classes.push('blur-0', 'scale-100');
+  }
+
+  return classes.join(' ');
+}
 
 export default Image;
