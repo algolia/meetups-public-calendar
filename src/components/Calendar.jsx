@@ -16,7 +16,7 @@ import Image from './Image.jsx';
  */
 const Calendar = ({ displayMode = 'website', displayDate }) => {
   const calendarRef = useRef(null);
-  const config = useCalendarConfig(displayMode, displayDate);
+  const config = useCalendarConfig(displayMode, displayDate, calendarRef);
   const meetups = useMeetups(displayDate);
   const onDateChange = useDateChange(displayMode);
   const { focusedEvent, onEventClick, onModalClose } = useEventModal();
@@ -25,28 +25,8 @@ const Calendar = ({ displayMode = 'website', displayDate }) => {
     return null;
   }
 
-  // Grab the height of one day, and resize teh whole calendar to make it square
-  const setSquare = () => {
-    const api = calendarRef.current.getApi();
-
-    // Get one cell height
-    const day = api.el.querySelector('.fc-daygrid-day');
-    const dayHeight = day.offsetHeight;
-
-    // Set the wrapper width as 5 times this height, so each cell is a square
-    const calendarWidth = 5 * dayHeight;
-    const wrapper = document.querySelector('.calendar-wrapper');
-    wrapper.style.width = `${calendarWidth}px`;
-
-    // Re-render the calendar so it fits in the whole available space
-    api.render();
-  };
-
   return (
     <div className="calendar-wrapper m-auto h-full">
-      <button className="fixed bg-blue-500 p-3" onClick={setSquare}>
-        Set Square
-      </button>
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin]}
@@ -58,7 +38,6 @@ const Calendar = ({ displayMode = 'website', displayDate }) => {
         eventClick={onEventClick}
         eventContent={renderEventContent}
         datesSet={onDateChange}
-        windowResize={setSquare}
         {...config}
       />
       <EventModal event={focusedEvent} onClose={onModalClose} />
@@ -151,17 +130,43 @@ function useEventModal() {
 }
 
 /**
+ * Custom hook to resize calendar to make cells square
+ * @param {object} calendarRef - Ref to the FullCalendar component
+ * @returns {Function} Function to resize calendar to square cells
+ */
+function useSquareResize(calendarRef) {
+  return useCallback(() => {
+    if (!calendarRef.current) return;
+
+    const api = calendarRef.current.getApi();
+    const day = api.el.querySelector('.fc-daygrid-day');
+    if (!day) return;
+
+    const dayHeight = day.offsetHeight;
+    const calendarWidth = 5 * dayHeight;
+    const wrapper = document.querySelector('.calendar-wrapper');
+    if (!wrapper) return;
+
+    wrapper.style.width = `${calendarWidth}px`;
+    api.render();
+  }, [calendarRef]);
+}
+
+/**
  * Custom hook to generate FullCalendar configuration based on display mode
  * @param {string} displayMode - "website" or "fullscreen"
  * @param {{year: number, month: number}} displayDate - Current display date
+ * @param {object} calendarRef - Ref to the FullCalendar component
  * @returns {{headerToolbar: object, customButtons: object}} FullCalendar config
  */
-function useCalendarConfig(displayMode, displayDate) {
+function useCalendarConfig(displayMode, displayDate, calendarRef) {
   const navigate = useNavigate();
 
   const fullscreenButtonClick = useCallback(() => {
     navigate(`/${displayDate.year}/${displayDate.month}/fullscreen`);
   }, [displayDate, navigate]);
+
+  const setSquare = useSquareResize(calendarRef);
 
   // Date as YYYY-MM-DD for FullCalendar initialDate
   const initialDate = dayjs(
@@ -182,7 +187,6 @@ function useCalendarConfig(displayMode, displayDate) {
           click: fullscreenButtonClick,
         },
       },
-      height: null,
       aspectRatio: 16 / 9,
       initialDate,
     },
@@ -194,8 +198,8 @@ function useCalendarConfig(displayMode, displayDate) {
       },
       customButtons: {},
       height: '100%',
-      aspectRatio: null,
       initialDate,
+      windowResize: setSquare,
     },
   };
 
