@@ -19,6 +19,14 @@ export default [
         ...globals.browser,
       },
     },
+    settings: {
+      jsdoc: {
+        mode: 'typescript',
+        preferredTypes: {
+          JSX: 'JSX',
+        },
+      },
+    },
     rules: {
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',

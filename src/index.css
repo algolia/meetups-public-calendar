@@ -49,9 +49,7 @@
       @apply min-h-[120px];
       @apply h-full;
 
-      .fc-daygrid-day-top {
-        /* Empty on purpose */
-      }
+      /* .fc-daygrid-day-top { } */
       .fc-daygrid-day-events {
         @apply absolute inset-0 m-0;
         .fc-daygrid-event-harness {

@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 const EventModal = ({ event, onClose }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -34,41 +38,23 @@ const EventModal = ({ event, onClose }) => {
     if (!event.extendedProps.startDate) return '';
 
     // Timestamp is already in Paris time, treat as UTC and display directly
-    const startDate = new Date(event.extendedProps.startDate * 1000);
+    const startDate = dayjs.unix(event.extendedProps.startDate).utc();
     const endDate = event.extendedProps.endDate
-      ? new Date(event.extendedProps.endDate * 1000)
+      ? dayjs.unix(event.extendedProps.endDate).utc()
       : null;
 
-    // Format date using UTC methods (to avoid timezone conversion)
-    const month = startDate.toLocaleDateString('en-US', {
-      month: 'long',
-      timeZone: 'UTC',
-    });
+    // Format date components
+    const month = startDate.format('MMMM');
+    const day = startDate.date();
+    const year = startDate.year();
 
-    const day = startDate.getUTCDate();
-    const year = startDate.getUTCFullYear();
-
-    // Format start time using UTC methods
-    const startTime = startDate
-      .toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'UTC',
-      })
-      .toLowerCase();
+    // Format start time (h:mm a format gives "5:30 pm")
+    const startTime = startDate.format('h:mm a');
 
     let dateTimeString = `${month} ${day}${getOrdinalSuffix(day)}, ${year}`;
 
     if (endDate) {
-      const endTime = endDate
-        .toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-          timeZone: 'UTC',
-        })
-        .toLowerCase();
+      const endTime = endDate.format('h:mm a');
       dateTimeString += `, from ${startTime} to ${endTime}`;
     } else {
       dateTimeString += `, at ${startTime}`;

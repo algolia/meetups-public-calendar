@@ -1,15 +1,27 @@
-import Calendar from './components/Calendar.jsx';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CalendarPageWebsite from './pages/CalendarPageWebsite.jsx';
+import CalendarPageFullscreen from './pages/CalendarPageFullscreen.jsx';
 
+/**
+ * Main app component with React Router setup
+ * Routes:
+ * - / : Current month, website mode
+ * - /:year/:month : Specific month, website mode
+ * - /:year/:month/fullscreen : Specific month, fullscreen mode
+ * @returns {JSX.Element} App with router
+ */
 const App = () => {
   return (
-    <>
-      <h1 className="mb-8 text-center text-4xl font-bold">
-        Algolia Meetups Calendar
-      </h1>
-      <div className="w-full max-w-7xl rounded-xl bg-slate-800 p-8 shadow-2xl">
-        <Calendar />
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<CalendarPageWebsite />} />
+        <Route path="/:year/:month" element={<CalendarPageWebsite />} />
+        <Route
+          path="/:year/:month/fullscreen"
+          element={<CalendarPageFullscreen />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
