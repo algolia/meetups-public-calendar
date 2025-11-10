@@ -83,12 +83,14 @@
               &:hover {
                 @apply bg-slate-700;
               }
+              /* Day number, when there is an event */
               &:has(.fc-event) .fc-daygrid-day-number {
-                @apply relative z-10;
-                @apply rounded;
-                @apply bg-slate-900/80;
-                @apply px-2 py-1;
-                backdrop-filter: blur(8px);
+                @apply hidden;
+                /* @apply absolute top-0 z-10; */
+                /* right: -1px; */
+                /* @apply bg-slate-900/80; */
+                /* @apply px-2 py-1; */
+                /* backdrop-filter: blur(8px); */
               }
               .fc-daygrid-day-frame {
                 .fc-daygrid-day-events {
@@ -108,6 +110,17 @@
 
                       .fc-event-main {
                         @apply absolute inset-0 m-0;
+                      }
+
+                      .event-title {
+                        @apply absolute right-0 bottom-0 left-0;
+                        @apply -mx-3 -mb-3;
+                        @apply hidden md:block;
+                        @apply whitespace-pre-line;
+                        @apply bg-slate-900/80;
+                        @apply px-5 py-2 pb-5;
+                        @apply text-xs text-white;
+                        backdrop-filter: blur(8px);
                       }
                     }
                   }

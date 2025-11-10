@@ -117,7 +117,7 @@ function useEventModal() {
 }
 
 /**
- * Render custom content for calendar events (image or title)
+ * Render custom content for calendar events (image with title overlay)
  * @param {object} eventInfo - FullCalendar event info
  * @returns {JSX.Element} Event content to display
  */
@@ -128,12 +128,17 @@ function renderEventContent(eventInfo) {
 
   if (imageUrl) {
     return (
-      <Image
-        src={imageUrl}
-        lqip={lqipUrl}
-        alt={eventInfo.event.title}
-        className="h-full w-full object-cover"
-      />
+      <div className="relative h-full w-full overflow-hidden">
+        <Image
+          src={imageUrl}
+          lqip={lqipUrl}
+          alt={eventInfo.event.title}
+          className="h-full w-full object-cover"
+        />
+        <div className="event-title">
+          {eventInfo.event.title}
+        </div>
+      </div>
     );
   }
 

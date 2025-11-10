@@ -23,14 +23,14 @@ const CalendarPageWebsite = () => {
   const currentMonthUrl = `/${now.year()}/${now.month() + 1}`;
 
   return (
-    <div className="website-wrapper flex h-screen flex-col items-center p-2 md:p-8">
+    <div className="website-wrapper flex h-screen flex-col items-center p-1 md:p-4">
       <Link
         to={currentMonthUrl}
-        className="mb-2 text-center text-2xl font-bold text-white transition-colors hover:text-blue-400 md:mb-8 md:text-4xl"
+        className="mb-1 text-center text-2xl font-bold text-white transition-colors hover:text-blue-400 md:mb-2 md:text-4xl"
       >
         <h1>Algolia Meetups Calendar</h1>
       </Link>
-      <div className="calendar-container w-full flex-1 rounded-xl bg-slate-800 p-2 md:p-8">
+      <div className="calendar-container w-full flex-1 rounded-xl bg-slate-800 p-1 md:p-4">
         <div className="calendar-wrapper m-auto h-full">
           <Calendar
             key={`${displayDate.year}-${displayDate.month}`}

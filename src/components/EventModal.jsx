@@ -74,7 +74,7 @@ const EventModal = ({ event, onClose }) => {
     >
       <div className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl bg-slate-800 shadow-2xl">
         <button
-          className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-3xl leading-none text-white transition-colors hover:bg-white/30"
+          className="absolute top-4 right-4 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-3xl leading-none text-white transition-colors hover:bg-white/30"
           onClick={onClose}
         >
           ×
