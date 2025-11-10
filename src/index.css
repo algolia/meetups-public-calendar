@@ -83,6 +83,13 @@
               &:hover {
                 @apply bg-slate-700;
               }
+              &:has(.fc-event) .fc-daygrid-day-number {
+                @apply relative z-10;
+                @apply rounded;
+                @apply bg-slate-900/80;
+                @apply px-2 py-1;
+                backdrop-filter: blur(8px);
+              }
               .fc-daygrid-day-frame {
                 .fc-daygrid-day-events {
                   @apply absolute inset-0 m-0;
