@@ -32,8 +32,6 @@
     "generate-secured-api-key": "node ./scripts/generateSecuredApiKey.js",
     "lint": "./scripts/lint",
     "lint:fix": "./scripts/lint-fix",
-    "test": "./scripts/test",
-    "test:watch": "./scripts/test-watch",
     "release": "./scripts/release"
   },
   "dependencies": {
