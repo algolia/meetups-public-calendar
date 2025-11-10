@@ -3,11 +3,11 @@
 command = "yarn run build"
 publish = "dist"
 
-# Custom 404
+# SPA redirect
 [[redirects]]
 from = "/*"
-to = "/404/"
-status = 404
+to = "/index.html"
+status = 200
 
 # Terry Pratchett homage
 [[headers]]
