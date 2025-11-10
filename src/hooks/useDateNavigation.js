@@ -19,7 +19,7 @@ function useDateNavigation({ fullscreen = false } = {}) {
       const newUrl = `/${year}/${month}${suffix}`;
 
       // Only navigate if URL actually changes
-      if (location.pathname == newUrl) {
+      if (location.pathname === newUrl) {
         return;
       }
       navigate(newUrl);
