@@ -1,5 +1,26 @@
 @import 'tailwindcss';
 
+/* Debug backgrounds when .debug class is on canvas */
+.calendar-wrapper.debug {
+  @apply !bg-red-600;
+
+  .fc-header-toolbar {
+    @apply !bg-purple-600;
+  }
+
+  .fc-col-header {
+    @apply !bg-yellow-400;
+  }
+
+  .fc-col-header-cell {
+    @apply !bg-yellow-400;
+  }
+
+  .fc-daygrid-body {
+    @apply !bg-green-500;
+  }
+}
+
 /* FullCalendar custom styles using Tailwind CSS variables  */
 .fc {
   --fc-border-color: var(--color-slate-700);
@@ -15,18 +36,20 @@
 
   .fc-header-toolbar {
     .fc-button {
-      @apply px-4;
-      @apply py-2;
+      @apply px-2 py-1;
+      @apply md:px-4 md:py-2;
       @apply font-medium;
       @apply capitalize;
     }
     .fc-toolbar-title {
-      @apply text-3xl;
+      @apply text-lg;
+      @apply md:text-3xl;
       @apply font-semibold;
     }
   }
 
   .fc-view-harness {
+    @apply mx-auto;
     .fc-daygrid {
       /* Grid ()*/
       table.fc-scrollgrid {
