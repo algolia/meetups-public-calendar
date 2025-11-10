@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import useEscapeKey from '../hooks/useEscapeKey.js';
 
 dayjs.extend(utc);
 
@@ -11,6 +12,9 @@ const EventModal = ({ event, onClose }) => {
   useEffect(() => {
     setIsExpanded(false);
   }, [event]);
+
+  // Close modal on Escape key
+  useEscapeKey(onClose);
 
   if (!event) return null;
 

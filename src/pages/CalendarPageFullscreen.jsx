@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
+import QRCode from 'react-qr-code';
 import Calendar from '../components/Calendar.jsx';
 import useEscapeKey from '../hooks/useEscapeKey.js';
 import useDateNavigation from '../hooks/useDateNavigation.js';
@@ -42,6 +43,9 @@ const CalendarPageFullscreen = () => {
     `${displayDate.year}-${displayDate.month}-01`,
   ).format('YYYY-MM-DD');
 
+  // Get URL for QR code (points to website version, not fullscreen)
+  const qrCodeUrl = `https://algolia-meetups-calendar.netlify.app/${displayDate.year}/${displayDate.month}`;
+
   return (
     <div className="fullscreen-wrapper h-screen bg-slate-800 p-8">
       {/* Exit fullscreen button - transparent by default, visible on hover */}
@@ -52,6 +56,12 @@ const CalendarPageFullscreen = () => {
       >
         ×
       </button>
+
+      {/* QR Code in bottom right corner */}
+      <div className="fixed bottom-4 right-4 z-10 rounded-lg bg-white p-3 shadow-lg">
+        <QRCode value={qrCodeUrl} size={128} />
+      </div>
+
       <div className="calendar-wrapper m-auto h-full">
         <Calendar
           ref={calendarRef}
