@@ -1,22 +1,37 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import dayjs from 'dayjs';
 import { getMeetups } from '../services/algolia';
 import EventModal from './EventModal.jsx';
 import Image from './Image.jsx';
+import { useSetSquare, useResizeListeners } from '../hooks/useSetSquare.js';
 
 /**
  * Calendar component that displays Algolia meetups
  * @param {object} props - Component props
  * @param {{year: number, month: number}} props.displayDate - Current date to display
+ * @param {Function} props.datesSet - Callback when dates change
  * @param {object} props...rest - All other props are passed directly to FullCalendar
- * @param {object} ref - Ref forwarded to FullCalendar component
  * @returns {JSX.Element} Calendar element
  */
-const Calendar = forwardRef(({ displayDate, ...props }, ref) => {
+const Calendar = ({ displayDate, datesSet, ...props }) => {
+  const calendarRef = useRef(null);
   const meetups = useMeetups(displayDate);
   const { focusedEvent, onEventClick, onModalClose } = useEventModal();
+
+  // Force square display
+  const setSquare = useSetSquare(calendarRef);
+  useResizeListeners(setSquare);
+
+  // Wrap datesSet to call setSquare after
+  const handleDatesSet = useCallback(
+    (dateInfo) => {
+      datesSet(dateInfo);
+      setSquare();
+    },
+    [datesSet, setSquare],
+  );
 
   if (!displayDate) {
     return null;
@@ -25,7 +40,7 @@ const Calendar = forwardRef(({ displayDate, ...props }, ref) => {
   return (
     <>
       <FullCalendar
-        ref={ref}
+        ref={calendarRef}
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
         firstDay={1}
@@ -34,14 +49,13 @@ const Calendar = forwardRef(({ displayDate, ...props }, ref) => {
         events={meetups}
         eventClick={onEventClick}
         eventContent={renderEventContent}
+        datesSet={handleDatesSet}
         {...props}
       />
       <EventModal event={focusedEvent} onClose={onModalClose} />
     </>
   );
-});
-
-Calendar.displayName = 'Calendar';
+};
 
 /**
  * Custom hook to fetch meetups from Algolia based on displayDate

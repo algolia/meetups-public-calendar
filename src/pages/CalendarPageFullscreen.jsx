@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import QRCode from 'react-qr-code';
@@ -15,7 +15,6 @@ import { getDisplayDate } from '../helpers/dateHelpers.js';
 const CalendarPageFullscreen = () => {
   const { year, month } = useParams();
   const navigate = useNavigate();
-  const calendarRef = useRef(null);
   const displayDate = getDisplayDate(year, month);
   const dateNavigation = useDateNavigation({ fullscreen: true });
 
@@ -24,19 +23,6 @@ const CalendarPageFullscreen = () => {
     navigate(`/${displayDate.year}/${displayDate.month}`);
   }, [displayDate, navigate]);
   useEscapeKey(handleExitFullscreen);
-
-  // Force square display
-  const setSquare = useSetSquare(calendarRef);
-  useResizeListeners(setSquare);
-
-  // Called when calendar dates change (including first render)
-  const onDateChange = useCallback(
-    (dateInfo) => {
-      dateNavigation(dateInfo);
-      setSquare();
-    },
-    [dateNavigation, setSquare],
-  );
 
   // Date as YYYY-MM-DD for FullCalendar initialDate
   const initialDate = dayjs(
@@ -62,81 +48,23 @@ const CalendarPageFullscreen = () => {
         <QRCode value={qrCodeUrl} size={128} />
       </div>
 
-      <div className="calendar-wrapper m-auto h-full">
-        <Calendar
-          ref={calendarRef}
-          displayDate={displayDate}
-          headerToolbar={{
-            left: '',
-            center: 'title',
-            right: '',
-          }}
-          height="100%"
-          initialDate={initialDate}
-          datesSet={onDateChange}
-        />
+      <div className="calendar-container h-full p-0">
+        <div className="calendar-wrapper m-auto h-full">
+          <Calendar
+            displayDate={displayDate}
+            headerToolbar={{
+              left: '',
+              center: 'title',
+              right: '',
+            }}
+            height="100%"
+            initialDate={initialDate}
+            datesSet={dateNavigation}
+          />
+        </div>
       </div>
     </div>
   );
 };
-
-/**
- * Custom hook to resize calendar to make cells square
- * @param {object} calendarRef - Ref to the FullCalendar component
- * @returns {Function} Function to resize calendar to square cells
- */
-function useSetSquare(calendarRef) {
-  return useCallback(() => {
-    if (!calendarRef.current) return;
-    const api = calendarRef.current.getApi();
-    const day = api.el.querySelector('.fc-daygrid-day');
-
-    // We get the height of one day, and we define the width as 5 * height
-    const dayHeight = day.offsetHeight;
-    const calendarWidth = 5 * dayHeight;
-    const wrapper = document.querySelector('.calendar-wrapper');
-
-    wrapper.style.width = `${calendarWidth}px`;
-    api.render();
-  }, [calendarRef]);
-}
-
-/**
- * Custom hook to listen to window resize and fullscreen change events
- * @param {Function} callback - Callback function to call on resize/fullscreen change
- */
-function useResizeListeners(callback) {
-  useEffect(() => {
-    // Debounced callback to avoid too many calls
-    let timeoutId;
-    const debouncedCallback = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        callback();
-      }, 100);
-    };
-
-    // Listen to all possible fullscreen events (browser compatibility)
-    const fullscreenEvents = [
-      'fullscreenchange',
-      'webkitfullscreenchange',
-      'mozfullscreenchange',
-      'MSFullscreenChange',
-    ];
-
-    window.addEventListener('resize', debouncedCallback);
-    fullscreenEvents.forEach((event) => {
-      document.addEventListener(event, debouncedCallback);
-    });
-
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('resize', debouncedCallback);
-      fullscreenEvents.forEach((event) => {
-        document.removeEventListener(event, debouncedCallback);
-      });
-    };
-  }, [callback]);
-}
 
 export default CalendarPageFullscreen;

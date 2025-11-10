@@ -1,23 +1,25 @@
 @import 'tailwindcss';
 
 /* Debug backgrounds when .debug class is on canvas */
-.calendar-wrapper.debug {
-  @apply !bg-red-600;
+.debug {
+  .calendar-wrapper {
+    @apply !bg-red-600;
 
-  .fc-header-toolbar {
-    @apply !bg-purple-600;
-  }
+    .fc-header-toolbar {
+      @apply !bg-purple-600;
+    }
 
-  .fc-col-header {
-    @apply !bg-yellow-400;
-  }
+    .fc-col-header {
+      @apply !bg-yellow-400;
+    }
 
-  .fc-col-header-cell {
-    @apply !bg-yellow-400;
-  }
+    .fc-col-header-cell {
+      @apply !bg-yellow-400;
+    }
 
-  .fc-daygrid-body {
-    @apply !bg-green-500;
+    .fc-daygrid-body {
+      @apply !bg-green-500;
+    }
   }
 }
 
@@ -34,7 +36,10 @@
 
   --fc-today-bg-color: var(--color-blue-900);
 
-  .fc-header-toolbar {
+  .fc-toolbar.fc-header-toolbar {
+    @apply mb-2;
+    @apply md:mb-4;
+
     .fc-button {
       @apply px-2 py-1;
       @apply md:px-4 md:py-2;
