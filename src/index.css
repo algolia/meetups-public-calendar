@@ -1,4 +1,6 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Debug backgrounds when .debug class is on canvas */
 .debug {
@@ -23,18 +25,18 @@
   }
 }
 
-/* FullCalendar custom styles using Tailwind CSS variables  */
+/* FullCalendar custom styles using Tailwind CSS color values  */
 .fc {
-  --fc-border-color: var(--color-slate-700);
+  --fc-border-color: #334155;
 
-  --fc-button-bg-color: var(--color-blue-600);
-  --fc-button-border-color: var(--color-blue-600);
-  --fc-button-hover-bg-color: var(--color-blue-700);
-  --fc-button-hover-border-color: var(--color-blue-700);
-  --fc-button-active-bg-color: var(--color-blue-800);
-  --fc-button-active-border-color: var(--color-blue-800);
+  --fc-button-bg-color: #2563eb;
+  --fc-button-border-color: #2563eb;
+  --fc-button-hover-bg-color: #1d4ed8;
+  --fc-button-hover-border-color: #1d4ed8;
+  --fc-button-active-bg-color: #1e40af;
+  --fc-button-active-border-color: #1e40af;
 
-  --fc-today-bg-color: var(--color-blue-900);
+  --fc-today-bg-color: #1e3a8a;
 
   .fc-toolbar.fc-header-toolbar {
     @apply mb-2;
@@ -79,6 +81,9 @@
                 .fc-daygrid-day-number {
                   @apply opacity-60;
                 }
+                &:hover {
+                  @apply opacity-100;
+                }
               }
               &:hover {
                 @apply bg-slate-700;
@@ -113,7 +118,7 @@
                       }
 
                       .event-title {
-                        @apply absolute right-0 bottom-0 left-0;
+                        @apply absolute bottom-0 left-0 right-0;
                         @apply -mx-3 -mb-3;
                         @apply hidden md:block;
                         @apply whitespace-pre-line;
